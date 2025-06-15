@@ -45,11 +45,3 @@ This project can be deployed to various platforms such as Vercel, Netlify, GitHu
 # Run project
 npm run dev
 ```
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-**Author:** [Hai1205](https://github.com/hai1205)
