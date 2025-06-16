@@ -53,6 +53,10 @@ declare global {
         user?: IUser;
         post?: IPost;
     }
+
+    interface IAuthJwtPayload {
+        userId: number;
+    }
 }
 
 export { };

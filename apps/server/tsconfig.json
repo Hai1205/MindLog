@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]

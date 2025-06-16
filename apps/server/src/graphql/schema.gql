@@ -58,10 +58,36 @@ type Like {
   createAt: DateTime!
 }
 
+type Auth {
+  id: Float!
+  email: String!
+  name: String!
+  avatar: String
+  accessToken: String!
+}
+
 type Query {
   post: [Post!]!
   user: [User!]!
   tag: [Tag!]!
   comment: [Comment!]!
   like: [Like!]!
+}
+
+type Mutation {
+  register(registerInput: CreateUserInput!): Auth!
+  login(loginInput: LoginInput!): Auth!
+}
+
+input CreateUserInput {
+  name: String!
+  password: String!
+  email: String!
+  bio: String
+  avatar: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
