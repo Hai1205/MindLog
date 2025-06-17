@@ -2,13 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { hash } from 'argon2';
+import { DEFAULT_PAGE_SIZE } from 'src/constants';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) { }
 
-  findAll() {
-    return this.prisma.user.findMany();
+  findAll(skip: number = 0, take: number = DEFAULT_PAGE_SIZE) {
+    return this.prisma.user.findMany({
+      skip: skip,
+      take: take,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 
   findOne(email: string) {

@@ -67,16 +67,40 @@ type Auth {
 }
 
 type Query {
-  post: [Post!]!
-  user: [User!]!
-  tag: [Tag!]!
-  comment: [Comment!]!
-  like: [Like!]!
+  posts(skip: Int, take: Int): [Post!]!
+  postCount: Int!
+  getPostById(id: Int!): Post!
+  getUserPosts(skip: Int, take: Int): [Post!]!
+  userPostCount: Int!
+  users(skip: Int, take: Int): [User!]!
+  tags(skip: Int, take: Int): [Tag!]!
+  comments(skip: Int, take: Int): [Comment!]!
+  likes(skip: Int, take: Int): [Like!]!
 }
 
 type Mutation {
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  deletePost(postId: Int!): Boolean!
   register(registerInput: CreateUserInput!): Auth!
   login(loginInput: LoginInput!): Auth!
+}
+
+input CreatePostInput {
+  title: String!
+  content: String!
+  thumbnail: String
+  tags: [String!]!
+  published: Boolean!
+}
+
+input UpdatePostInput {
+  title: String
+  content: String
+  thumbnail: String
+  tags: [String!]
+  published: Boolean
+  postId: Int!
 }
 
 input CreateUserInput {
