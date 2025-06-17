@@ -4,6 +4,7 @@ import "./globals.css";
 import NavbarContainer from "@/components/navbar/NavbarContainer";
 import Navbar from "@/components/navbar/Navbar";
 import Providers from "./providers";
+import { ToastContainer, Slide } from "react-toastify";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,7 +40,20 @@ export default function RootLayout({
           </NavbarContainer>
 
           {children}
-          {/* <Toaster /> */}
+
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Slide}
+          />
         </Providers>
       </body>
     </html>

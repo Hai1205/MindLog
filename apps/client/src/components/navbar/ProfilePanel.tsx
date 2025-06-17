@@ -1,5 +1,5 @@
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   ArrowRightStartOnRectangleIcon,
   ListBulletIcon,
@@ -7,13 +7,13 @@ import {
   UserIcon,
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { SessionUser } from "../lib/session";
+import { SessionUser } from "../../lib/session";
 
 interface ProfileProps {
   user: SessionUser;
 };
 
-const Profile = ({ user }: ProfileProps) => {
+const ProfilePanel = ({ user }: ProfileProps) => {
   return (
     <Popover>
       <PopoverTrigger>
@@ -59,4 +59,4 @@ const Profile = ({ user }: ProfileProps) => {
   );
 };
 
-export default Profile;
+export default ProfilePanel;

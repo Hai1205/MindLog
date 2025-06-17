@@ -34,7 +34,7 @@ const CommentPagination = ({
       {currentPage !== 1 && (
         <button
           onClick={() => handleClick(currentPage - 1)}
-          className={cn("rounded-md bg-slate-200 py-2 px-2")}
+          className={cn("rounded-md bg-slate-200 py-2 px-2 cursor-pointer hover:text-sky-600")}
         >
           <ChevronLeftIcon className="w-4" />
         </button>
@@ -45,7 +45,7 @@ const CommentPagination = ({
           onClick={() => handleClick(page)}
           key={index}
           disabled={page === "..."}
-          className={cn("px-3 py-1 rounded-md transition hover:text-sky-600", {
+          className={cn("px-3 py-1 rounded-md transition hover:text-sky-600 cursor-pointer", {
             "bg-slate-200": currentPage !== page && page !== "...",
             "bg-blue-500 text-white": currentPage === page,
             "cursor-not-allowed": page === "...",
@@ -59,7 +59,7 @@ const CommentPagination = ({
       {currentPage !== totalPages && (
         <button
           onClick={() => handleClick(currentPage + 1)}
-          className="rounded-md bg-slate-200 py-2 px-2"
+          className="rounded-md bg-slate-200 py-2 px-2 cursor-pointer hover:text-sky-600"
         >
           <ChevronRightIcon className="w-4" />
         </button>

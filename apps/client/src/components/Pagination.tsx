@@ -27,7 +27,7 @@ const Pagination = ({
     <div className={cn("flex items-center justify-center gap-2", className)}>
       {/* pervious page button */}
       {currentPage !== 1 && (
-        <button className={cn("rounded-md bg-slate-200 py-2 px-2")}>
+        <button className={cn("rounded-md bg-slate-200 py-2 px-2 cursor-pointer hover:text-sky-600")}>
           <Link href={`?page=${currentPage - 1}`}>
             <ChevronLeftIcon className="w-4" />
           </Link>
@@ -49,7 +49,7 @@ const Pagination = ({
 
       {/* next page button */}
       {currentPage !== totalPages && (
-        <button className="rounded-md bg-slate-200 py-2 px-2">
+        <button className="rounded-md bg-slate-200 py-2 px-2 cursor-pointer hover:text-sky-600">
           <Link href={`?page=${currentPage + 1}`}>
             <ChevronRightIcon className="w-4" />
           </Link>

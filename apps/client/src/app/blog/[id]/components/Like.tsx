@@ -31,11 +31,11 @@ const Like = (props: LikeProps) => {
     <div className="mt-3 flex items-center justify-start gap-2">
       {data?.userLikedPost ? (
         <button onClick={() => unlikeMutation.mutate()}>
-          <SolidHeartIcon className="w-6 text-rose-600" />
+          <SolidHeartIcon className="w-6 text-rose-600 cursor-pointer" />
         </button>
       ) : (
         <button onClick={() => likeMutation.mutate()}>
-          <HeartIcon className="w-6" />
+          <HeartIcon className="w-6 cursor-pointer" />
         </button>
       )}
       

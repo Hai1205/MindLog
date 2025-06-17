@@ -37,6 +37,7 @@ export class PostResolver {
     @Args('take', { nullable: true, type: () => Int }) take?: number,
   ) {
     const userId = context.req.user.id;
+    
     return this.postService.findByUser({
       userId,
       skip: skip ?? 0,
@@ -48,6 +49,7 @@ export class PostResolver {
   @Query(() => Int)
   userPostCount(@Context() context) {
     const userId = context.req.user.id;
+
     return this.postService.userPostCount(userId);
   }
 
@@ -70,6 +72,7 @@ export class PostResolver {
     @Args('updatePostInput') updatePostInput: UpdatePostInput,
   ) {
     const userId = context.req.user.id;
+
     return this.postService.update({ userId, updatePostInput });
   }
 
@@ -80,6 +83,7 @@ export class PostResolver {
     @Args('postId', { type: () => Int }) postId: number,
   ) {
     const userId = context.req.user.id;
+
     return this.postService.delete({ postId, userId });
   }
 }

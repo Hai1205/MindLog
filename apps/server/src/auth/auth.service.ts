@@ -21,12 +21,19 @@ export class AuthService {
 
     if (!user.password) throw new UnauthorizedException('User has no password set');
 
-    const isPasswordMatched = await verify(user.password, password);
+    if (!user.password.startsWith('$')) {
+      throw new UnauthorizedException('Invalid password format');
+    }
 
-    if (!isPasswordMatched)
+    try {
+      const isPasswordMatched = await verify(user.password, password);
+      if (!isPasswordMatched) {
+        throw new UnauthorizedException('Invalid Credentials!');
+      }
+      return user;
+    } catch {
       throw new UnauthorizedException('Invalid Credentials!');
-
-    return user;
+    }
   }
 
   async generateToken(userId: number) {
@@ -35,8 +42,16 @@ export class AuthService {
     return { accessToken };
   }
 
-  async login(loginInput: LoginInput) {
-    const user = await this.validateLocalUser(loginInput);
+  async login(loginInput: LoginInput | any) {
+    let user;
+
+    // Nếu đây là dữ liệu người dùng từ Google OAuth
+    if (loginInput.id) {
+      user = loginInput;
+    } else {
+      // Nếu đây là đăng nhập thông thường
+      user = await this.validateLocalUser(loginInput);
+    }
 
     const { accessToken } = await this.generateToken(user.id);
 
@@ -56,7 +71,7 @@ export class AuthService {
     const user = await this.userService.findUserById(userId);
 
     if (!user) throw new UnauthorizedException('User not found!');
-    
+
     return user;
   }
 
@@ -66,14 +81,17 @@ export class AuthService {
     if (user) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...authUser } = user;
+
       return authUser;
     }
 
     const dbUser = await this.prisma.user.create({
       data: { ...googleUser },
     });
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...authUser } = dbUser;
+
     return authUser;
   }
 }

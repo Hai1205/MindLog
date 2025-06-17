@@ -18,8 +18,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
         } as StrategyOptions);
     }
     async validate(
-        // accessToken: string,
-        // refreshToken: string,
+        accessToken: string,
+        refreshToken: string,
         profile: any,
         done: VerifyCallback,
     ) {

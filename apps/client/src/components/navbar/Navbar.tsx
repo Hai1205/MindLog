@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/session";
 import Link from "next/link";
-import Profile from "../Profile";
-import LoginPanel from "../LoginPanel";
+import ProfilePanel from "./ProfilePanel";
+import LoginPanel from "./LoginPanel";
 
 const Navbar = async () => {
   const session = await getSession();
@@ -26,7 +26,7 @@ const Navbar = async () => {
         </Link>
 
         {session && session.user ? (
-          <Profile user={session.user} />
+          <ProfilePanel user={session.user} />
         ) : (
           <LoginPanel />
         )}

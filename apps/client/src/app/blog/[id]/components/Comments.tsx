@@ -9,7 +9,7 @@ import CommentCardSkeleton from "./CommentCardSkeleton";
 import { SessionUser } from "@/lib/session";
 import AddComment from "./AddComment";
 import { RefreshCcwIcon } from "lucide-react";
-import CommentPagination from "./CommentPagination‎";
+import CommentPagination from "./CommentPagination";
 
 interface CommentsProps {
   postId: number;
@@ -33,7 +33,7 @@ const Comments = ({ postId, user }: CommentsProps) => {
   return (
     <div className="p-2 rounded-md shadow-md">
       <button onClick={() => refetch()}>
-        <RefreshCcwIcon className="w-6" />
+        <RefreshCcwIcon className="w-6 cursor-pointer" />
       </button>
 
       <h6 className="text-lg text-slate-700 ">Comments</h6>

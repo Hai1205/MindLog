@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import Posts from "@/components/post/Posts";
 import { fetchPosts } from "@/lib/actions/post.action";
-import { DEFAULT_PAGE_SIZE, SERVER_URL } from "@/lib/constants";
+import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
 
 interface HomeProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -9,7 +9,6 @@ interface HomeProps {
 
 export default async function Home({ searchParams }: HomeProps) {
   const { page } = await searchParams;
-  console.log(SERVER_URL)
   const { totalPosts, posts } = await fetchPosts({
     page: page ? +page : undefined,
   });

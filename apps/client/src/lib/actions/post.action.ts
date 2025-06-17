@@ -7,7 +7,6 @@ import { transformTakeSkip } from "../helpers";
 import { uploadThumbnail } from "../upload";
 import { print } from "graphql";
 
-
 export const fetchPosts = async ({
   page,
   pageSize,
@@ -47,7 +46,6 @@ export async function fetchUserPosts({
 }
 
 export async function saveNewPost(
-  // state: PostFormState,
   formData: FormData
 ): Promise<PostFormState> {
   const validatedFields = PostFormSchema.safeParse(
@@ -60,7 +58,6 @@ export async function saveNewPost(
       errors: validatedFields.error.flatten().fieldErrors,
     };
   let thumbnailUrl = "";
-  // Todo:Upload Thumbnail to supabase
   if (validatedFields.data.thumbnail)
     thumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
 
@@ -79,7 +76,6 @@ export async function saveNewPost(
 }
 
 export async function updatePost(
-  state: PostFormState,
   formData: FormData
 ): Promise<PostFormState> {
   const validatedFields = PostFormSchema.safeParse(

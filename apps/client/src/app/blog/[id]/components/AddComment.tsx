@@ -7,13 +7,13 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/useToast";
 import { saveComment } from "@/lib/actions/post.action";
 import { SessionUser } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import { Dialog } from "@radix-ui/react-dialog";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { useActionState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 interface AddCommentProps {
   postId: number;
@@ -32,22 +32,22 @@ interface AddCommentProps {
 
 const AddComment = (props: AddCommentProps) => {
   const [state, action] = useActionState(saveComment, undefined);
-  const { toast } = useToast();
 
   useEffect(() => {
     if (state?.message)
-      toast({
-        title: state?.ok ? "Success" : "Oops!",
-        description: state?.message,
-      });
+      if (state?.ok) {
+        toast.success(state?.message);
+      } else {
+        toast.error(state?.message);
+      }
       
     if (state?.ok) props?.refetch();
-  }, [props.refetch, state?.ok, state?.message, props, toast]);
+  }, [props.refetch, state?.ok, state?.message, props]);
 
   return (
     <Dialog open={state?.open}>
       <DialogTrigger asChild>
-        <Button>Leave Your Comment</Button>
+        <Button className="cursor-pointer">Leave Your Comment</Button>
       </DialogTrigger>
 
       <DialogContent>
@@ -77,7 +77,7 @@ const AddComment = (props: AddCommentProps) => {
             <span className="text-slate-700">{props.user.name}</span>
           </p>
 
-          <SubmitButton className="mt-2">Submit</SubmitButton>
+          <SubmitButton className="mt-2 cursor-pointer">Submit</SubmitButton>
         </form>
       </DialogContent>
     </Dialog>

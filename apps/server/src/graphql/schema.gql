@@ -75,13 +75,20 @@ type Query {
   users(skip: Int, take: Int): [User!]!
   tags(skip: Int, take: Int): [Tag!]!
   comments(skip: Int, take: Int): [Comment!]!
+  getPostComments(postId: Int!, take: Int = 12, skip: Int = 0): [Comment!]!
+  postCommentCount(postId: Int!): Int!
   likes(skip: Int, take: Int): [Like!]!
+  postLikesCount(postId: Int!): Int!
+  userLikedPost(postId: Int!): Boolean!
 }
 
 type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   deletePost(postId: Int!): Boolean!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  likePost(postId: Int!): Boolean!
+  unlikePost(postId: Int!): Boolean!
   register(registerInput: CreateUserInput!): Auth!
   login(loginInput: LoginInput!): Auth!
 }
@@ -101,6 +108,11 @@ input UpdatePostInput {
   tags: [String!]
   published: Boolean
   postId: Int!
+}
+
+input CreateCommentInput {
+  postId: Int!
+  content: String!
 }
 
 input CreateUserInput {
