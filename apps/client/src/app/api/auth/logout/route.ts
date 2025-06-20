@@ -1,4 +1,4 @@
-import { deleteSession } from "@/lib/session";
+import { deleteSession } from "@/utils/services/session";
 import { redirect } from "next/navigation";
 
 export async function GET() {

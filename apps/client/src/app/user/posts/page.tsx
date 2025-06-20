@@ -1,5 +1,5 @@
 import { fetchUserPosts } from "@/lib/actions/postActions";
-import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
+import { DEFAULT_PAGE_SIZE } from "@/utils/services/constants";
 import NoPost from "./_components/NoPost";
 import PostList from "./_components/PostList";
 

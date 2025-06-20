@@ -4,7 +4,7 @@ import { Comment } from './entities/comment.entity';
 import { UseGuards } from '@nestjs/common';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { DEFAULT_PAGE_SIZE } from 'src/constants';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/service/constants';
 
 @Resolver(() => Comment)
 export class CommentResolver {

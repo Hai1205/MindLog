@@ -1,4 +1,6 @@
-import { calculatePageNumbers } from "@/lib/helpers";
+"use client";
+
+import { calculatePageNumbers } from "@/utils/services/helpers";
 import { cn } from "@/lib/utils";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";

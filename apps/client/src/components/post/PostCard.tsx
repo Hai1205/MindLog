@@ -1,4 +1,4 @@
-
+import { formatDateInDDMMYYY } from "@/utils/services/helpers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,13 +19,13 @@ const PostCard = ({ post }: PostCardProps) => {
         </h3>
 
         <p className="mt-2 text-gray-500 text-sm ">
-          {new Date(post?.createdAt ?? "").toLocaleDateString()}
+          {formatDateInDDMMYYY(post?.createdAt ?? "")}
         </p>
 
         <p className="mt-4 text-gray-700 break-words">
           {post?.content?.slice(0, 100)}...
         </p>
-        
+
         <Link
           className="text-indigo-600 hover:underline mt-auto text-right block"
           href={`/blog/${post?.id}`}

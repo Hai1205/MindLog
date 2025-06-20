@@ -3,22 +3,41 @@
 import SubmitButton from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/lib/actions/auth.action";
-import { useActionState } from "react";
-
-const initialState = {
-    data: {},
-    errors: {},
-    message: "",
-};
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
-    const [state, formAction] = useActionState(login, initialState);
+    const router = useRouter();
+    
+    const { login, error } = useAuthStore();
+
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [message, setMessage] = useState<string>("");
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setErrors({});
+        setMessage("");
+
+        const formData = new FormData(e.currentTarget);
+        await login(formData);
+
+        if (error) {
+            setMessage(error || "Đã xảy ra lỗi khi đăng nhập");
+            return;
+        }
+
+        router.push("/user/posts");
+        setIsSubmitting(false);
+    };
 
     return (
-        <form action={formAction} className="flex flex-col gap-2">
-            {!!state?.message && (
-                <p className="text-red-500 text-sm">{state.message}</p>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+            {!!message && (
+                <p className="text-red-500 text-sm">{message}</p>
             )}
             <div>
                 <Label htmlFor="email">Email</Label>
@@ -27,11 +46,10 @@ const LoginForm = () => {
                     name="email"
                     placeholder="john@example.com"
                     type="email"
-                    defaultValue={state?.data?.email as string}
                 />
             </div>
-            {!!state?.errors?.email && (
-                <p className="text-red-500 text-sm">{state.errors.email}</p>
+            {!!errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
             )}
 
             <div>
@@ -40,14 +58,15 @@ const LoginForm = () => {
                     id="password"
                     name="password"
                     type="password"
-                    defaultValue={state?.data?.password as string}
                 />
             </div>
-            {!!state?.errors?.password && (
-                <p className="text-red-500 text-sm">{state.errors.password}</p>
+            {!!errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
             )}
 
-            <SubmitButton>Login</SubmitButton>
+            <SubmitButton disabled={isSubmitting}>
+                {isSubmitting ? "Đang đăng nhập..." : "Login"}
+            </SubmitButton>
         </form>
     );
 };

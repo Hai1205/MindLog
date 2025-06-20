@@ -1,11 +1,15 @@
 # MindLog
 
+MindLog is a web application that allows users to easily create, share, and manage their own blog posts. Besides writing, users can also browse, read, and discover posts from the community, creating a rich space for sharing knowledge and personal experiences. MindLog focuses on simplicity, convenience, and connecting people through valuable stories and ideas.
 
 ## Features
 
-
-## Technologies Used
-
+- Register, login
+- User management
+- Create, edit, delete posts
+- Comment on posts
+- Like posts
+- Tagging posts
 
 ## Installation
 
@@ -32,18 +36,6 @@ npm run dev
 
 ```bash
 npm run build
-```
-
-## Customization
-
-
-## Deployment
-
-This project can be deployed to various platforms such as Vercel, Netlify, GitHub Pages, etc.
-
-```bash
-# Run project
-npm run dev
 ```
 
 ## License

@@ -7,7 +7,7 @@ import {
   UserIcon,
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { SessionUser } from "../../lib/session";
+import { SessionUser } from "../../utils/services/session";
 
 interface ProfileProps {
   user: SessionUser;
@@ -22,7 +22,7 @@ const ProfilePanel = ({ user }: ProfileProps) => {
             className="rounded-full w-14 border-2 border-white"
             src={user.avatar}
           />
-          
+
           <AvatarFallback>
             <UserIcon className="w-8 text-slate-500" />
           </AvatarFallback>
@@ -38,7 +38,7 @@ const ProfilePanel = ({ user }: ProfileProps) => {
         <div className="*:grid *:grid-cols-5 *:gap-3 *:items-center *:my-2 *:py-2 [&>*>span]:col-span-4 [&>*:hover]:bg-sky-500 [&>*:hover]:text-white *:transition *:rounded-md [&>*>*:nth-child(1)]:justify-self-end ">
           <a href="/api/auth/logout">
             <ArrowRightStartOnRectangleIcon className="w-4" />
-           
+
             <span>Logout</span>
           </a>
 
@@ -47,7 +47,7 @@ const ProfilePanel = ({ user }: ProfileProps) => {
 
             <span>Create New Post</span>
           </Link>
-          
+
           <Link href="/user/posts">
             <ListBulletIcon className="w-4" />
 

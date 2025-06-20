@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const GET_POSTS = gql`
+export const GET_ALL_POSTS = gql`
   query posts($skip: Int, $take: Int) {
     posts(skip: $skip, take: $take) {
       id

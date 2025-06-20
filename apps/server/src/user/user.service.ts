@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { hash } from 'argon2';
-import { DEFAULT_PAGE_SIZE } from 'src/constants';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/service/constants';
 
 @Injectable()
 export class UserService {

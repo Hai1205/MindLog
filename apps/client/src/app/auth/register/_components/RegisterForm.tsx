@@ -3,22 +3,40 @@
 import SubmitButton from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { register } from "@/lib/actions/auth.action";
-import { useActionState } from "react";
-
-const initialState = {
-    data: {},
-    errors: {},
-    message: "",
-};
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
-    const [state, formAction] = useActionState(register, initialState);
+    const router = useRouter();
+
+    const { register, error } = useAuthStore();
+
+    const [message, setMessage] = useState<string>("");
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setMessage("");
+
+        const formData = new FormData(e.currentTarget);
+
+        await register(formData);
+
+        if (error) {
+            setMessage(error || "Đã xảy ra lỗi khi đăng ký");
+            return;
+        }
+
+        router.push("/auth/login");
+        setIsSubmitting(false);
+    };
 
     return (
-        <form action={formAction} className="flex flex-col gap-2">
-            {!!state?.message && (
-                <p className="text-red-500 text-sm">{state.message}</p>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+            {!!message && (
+                <p className="text-red-500 text-sm">{message}</p>
             )}
 
             <div>
@@ -28,12 +46,11 @@ const RegisterForm = () => {
                     id="name"
                     name="name"
                     placeholder="John Doe"
-                    defaultValue={state?.data?.name as string}
-                />
+                />  
             </div>
 
-            {!!state?.errors?.name && (
-                <p className="text-red-500 text-sm">{state.errors.name}</p>
+            {!!error && (
+                <p className="text-red-500 text-sm">{error}</p>
             )}
 
             <div>
@@ -43,12 +60,11 @@ const RegisterForm = () => {
                     id="email"
                     name="email"
                     placeholder="john@example.com"
-                    defaultValue={state?.data?.email as string}
                 />
             </div>
 
-            {!!state?.errors?.email && (
-                <p className="text-red-500 text-sm">{state.errors.email}</p>
+            {!!error && (
+                <p className="text-red-500 text-sm">{error}</p>
             )}
 
             <div>
@@ -58,23 +74,26 @@ const RegisterForm = () => {
                     id="password"
                     name="password"
                     type="password"
-                    defaultValue={state?.data?.password as string}
                 />
             </div>
 
-            {!!state?.errors?.password && (
+            {!!error && (
                 <div className="text-sm text-red-500">
                     <p>Password Must:</p>
 
                     <ul>
-                        {state.errors.password.map((err) => (
-                            <li key={err}>{err}</li>
-                        ))}
+                        {Array.isArray(error) ? (
+                            error.map((err: string) => <li key={err}>{err}</li>)
+                        ) : (
+                            <li>{error}</li>
+                        )}
                     </ul>
                 </div>
             )}
 
-            <SubmitButton>Register</SubmitButton>
+            <SubmitButton disabled={isSubmitting}>
+                {isSubmitting ? "Đang đăng ký..." : "Register"}
+            </SubmitButton>
         </form>
     );
 };

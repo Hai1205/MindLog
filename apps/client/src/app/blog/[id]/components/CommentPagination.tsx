@@ -1,4 +1,4 @@
-import { calculatePageNumbers } from "@/lib/helpers";
+import { calculatePageNumbers } from "@/utils/services/helpers";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
@@ -54,7 +54,7 @@ const CommentPagination = ({
           {page === "..." ? "..." : <span>{page}</span>}
         </button>
       ))}
-      
+
       {/* next page button */}
       {currentPage !== totalPages && (
         <button

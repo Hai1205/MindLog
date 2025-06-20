@@ -1,5 +1,5 @@
-import { SERVER_URL } from '@/lib/constants';
-import { createSession } from "@/lib/session";
+import { SERVER_URL } from '@/utils/services/constants';
+import { createSession } from "@/utils/services/session";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 

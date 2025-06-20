@@ -7,45 +7,52 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { saveComment } from "@/lib/actions/post.action";
-import { SessionUser } from "@/lib/session";
+import { usePostStore } from "@/stores/usePostStore";
 import { cn } from "@/lib/utils";
 import { Dialog } from "@radix-ui/react-dialog";
-import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
-import { useActionState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 interface AddCommentProps {
   postId: number;
-  user: SessionUser;
+  user: IUser;
   className?: string;
-  refetch: (options?: RefetchOptions) => Promise<
-    QueryObserverResult<
-      {
-        comments: IComment[];
-        count: number;
-      },
-      Error
-    >
-  >;
+  refetch: () => Promise<void>;
 };
 
 const AddComment = (props: AddCommentProps) => {
-  const [state, action] = useActionState(saveComment, undefined);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [content, setContent] = useState("");
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (state?.message)
-      if (state?.ok) {
-        toast.success(state?.message);
-      } else {
-        toast.error(state?.message);
-      }
-      
-    if (state?.ok) props?.refetch();
-  }, [props.refetch, state?.ok, state?.message, props]);
+  const { createComment } = usePostStore();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+
+    if (!content.trim()) {
+      setError("Nội dung không được để trống");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const response = await createComment(props.postId, content);
+
+    if (response?.status) {
+      await props.refetch();
+      setContent("");
+      setIsOpen(false);
+      toast.success("Bình luận đã được đăng!");
+    } else {
+      setError(response?.error || "Có lỗi xảy ra khi đăng bình luận");
+    }
+  };
 
   return (
-    <Dialog open={state?.open}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer">Leave Your Comment</Button>
       </DialogTrigger>
@@ -53,20 +60,20 @@ const AddComment = (props: AddCommentProps) => {
       <DialogContent>
         <DialogTitle>Write Your Comment</DialogTitle>
 
-        <form action={action} className={cn(props.className)}>
-          <input hidden name="postId" defaultValue={props.postId} />
-
+        <form onSubmit={handleSubmit} className={cn(props.className)}>
           <Label htmlFor="comment">Your Comment</Label>
 
           <div className="border-t border-x rounded-t-md">
             <Textarea
               className="border-none active:outline-none focus-visible:ring-0 shadow-none"
               name="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             />
 
-            {!!state?.errors?.content && (
+            {!!error && (
               <p className="text-red-500 animate-shake">
-                {state.errors.content}
+                {error}
               </p>
             )}
           </div>
@@ -77,7 +84,12 @@ const AddComment = (props: AddCommentProps) => {
             <span className="text-slate-700">{props.user.name}</span>
           </p>
 
-          <SubmitButton className="mt-2 cursor-pointer">Submit</SubmitButton>
+          <SubmitButton
+            className="mt-2 cursor-pointer"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Đang gửi..." : "Submit"}
+          </SubmitButton>
         </form>
       </DialogContent>
     </Dialog>

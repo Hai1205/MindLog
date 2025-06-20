@@ -3,7 +3,7 @@ import { PostService } from './post.service';
 import { Post } from './entities/post.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { DEFAULT_PAGE_SIZE } from 'src/constants';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/service/constants';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
 

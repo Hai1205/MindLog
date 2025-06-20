@@ -1,27 +1,43 @@
+"use client";
+
 import Hero from "@/components/Hero";
 import Posts from "@/components/post/Posts";
-import { fetchPosts } from "@/lib/actions/post.action";
-import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
+import { usePostStore } from "@/stores/usePostStore";
+import { DEFAULT_PAGE_SIZE } from "@/utils/services/constants";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-interface HomeProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+export default function Home() {
+  const searchParams = useSearchParams();
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-export default async function Home({ searchParams }: HomeProps) {
-  const { page } = await searchParams;
-  const { totalPosts, posts } = await fetchPosts({
-    page: page ? +page : undefined,
-  });
+  const { getAllPosts, posts, totalPosts, isLoading } = usePostStore();
+
+  const currentPage = searchParams.get("page")
+    ? Number(searchParams.get("page"))
+    : 1;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getAllPosts(0, 12);
+      setDataLoaded(true);
+    };
+
+    fetchData();
+  }, [getAllPosts, searchParams]);
 
   return (
     <main>
       <Hero />
 
-      <Posts
-        posts={posts}
-        currentPage={page ? +page : 1}
-        totalPages={Math.ceil(totalPosts / DEFAULT_PAGE_SIZE)}
-      />
+      {dataLoaded && (
+        <Posts
+          posts={posts}
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalPosts / DEFAULT_PAGE_SIZE)}
+          isLoading={isLoading}
+        />
+      )}
     </main>
   );
 }

@@ -1,9 +1,7 @@
-import Image from "next/image";
-import SanitizedContent from "./components/SanitizedContent";
-import Comments from "./components/Comments";
-import { getSession } from "@/lib/session";
-import Like from "./components/Like";
-import { fetchPostById } from "@/lib/actions/post.action";
+import BlogPostClient from "./components/BlogPostClient";
+import { usePostStore } from "@/stores/usePostStore";
+import { useEffect } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface PostPageProps {
   params: {
@@ -11,36 +9,25 @@ interface PostPageProps {
   };
 };
 
-const PostPage = async ({ params }: PostPageProps) => {
-  const resolvedParams = await params;
-  const postId = resolvedParams.id;
-  const post = await fetchPostById(+postId);
-  const session = await getSession();
+const PostPage = ({ params }: PostPageProps) => {
+  const { getPostById, post } = usePostStore();
+  const { userAuth } = useAuthStore();
 
-  return (
-    <main className="container mx-auto px-4 py-8 mt-16">
-      <h1 className="text-4xl font-bold mb-4 text-slate-700">{post?.title ?? ""}</h1>
+  useEffect(() => {
+    const fetchPost = async () => {
+      const response = await getPostById(+params.id);
+      if (response && response.status && response.data) {
+        return response.data;
+      }
+    };
+    fetchPost();
+  }, [getPostById, params.id]);
 
-      <p className="text-slate-500 text-sm mb-4">
-        By {post?.author?.name} | {new Date(post?.createdAt ?? "").toLocaleDateString()}
-      </p>
+  if (!post) return <div>Loading...</div>;
 
-      <div className="relative w-80 h-60">
-        <Image
-          src={post?.thumbnail ?? "/no-image.png"}
-          alt={post?.title ?? ""}
-          fill
-          className="rounded-md object-cover"
-        />
-      </div>
-
-      <SanitizedContent content={post?.content ?? ""} />
-
-      <Like postId={post?.id ?? 0} user={session?.user} />
-
-      <Comments user={session?.user} postId={post?.id ?? 0} />
-    </main>
-  );
+  return <BlogPostClient post={post} user={userAuth as IUser} />;
 };
 
 export default PostPage;
+
+

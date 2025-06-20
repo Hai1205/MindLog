@@ -14,55 +14,50 @@ function generateSlug(title: string): string {
 
 async function main() {
     const defaultPassword = await hash('123');
-    const users: IUser[] = Array.from({ length: 10 }).map(() => ({
-        id: faker.number.int({ min: 1, max: 1000000 }),
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        bio: faker.lorem.sentence(),
-        avatar: faker.image.avatar(),
-        password: defaultPassword,
-    }));
 
-    await prisma.user.createMany({
-        data: users,
-    });
+    await prisma.like.deleteMany({});
+    await prisma.comment.deleteMany({});
+    await prisma.post.deleteMany({});
+    await prisma.tag.deleteMany({});
+    await prisma.user.deleteMany({});
 
-    const posts: IPost[] = Array.from({ length: 400 }).map(() => ({
-        id: faker.number.int({ min: 1, max: 1000000 }),
-        title: faker.lorem.sentence(),
-        slug: generateSlug(faker.lorem.sentence()),
-        content: faker.lorem.paragraphs(3),
-        thumbnail: faker.image.urlLoremFlickr({ height: 240, width: 320 }),
-        authorId: faker.number.int({ min: 1, max: 10 }),
-        published: true,
-    }));
-
-    await Promise.all(
-        posts.map(
-            async (post) =>
-                await prisma.post.create({
-                    data: {
-                        id: post.id,
-                        title: post.title,
-                        slug: post.slug,
-                        content: post.content,
-                        thumbnail: post.thumbnail,
-                        published: post.published,
-                        authorId: post.authorId,
-                        createdAt: post.createdAt,
-                        updatedAt: post.updatedAt,
-                        comments: {
-                            createMany: {
-                                data: Array.from({ length: 20 }).map(() => ({
-                                    content: faker.lorem.sentence(),
-                                    authorId: faker.number.int({ min: 1, max: 10 }),
-                                })),
-                            },
-                        },
-                    },
-                }),
-        ),
+    const users = await Promise.all(
+        Array.from({ length: 10 }).map(async () => {
+            return await prisma.user.create({
+                data: {
+                    name: faker.person.fullName(),
+                    email: faker.internet.email(),
+                    bio: faker.lorem.sentence(),
+                    avatar: faker.image.avatar(),
+                    password: defaultPassword,
+                }
+            });
+        })
     );
+
+    const userIds = users.map(user => user.id);
+
+    for (let i = 0; i < 50; i++) {
+        const title = faker.lorem.sentence();
+        await prisma.post.create({
+            data: {
+                title: title,
+                slug: generateSlug(title),
+                content: faker.lorem.sentences(2),
+                thumbnail: faker.image.urlLoremFlickr({ height: 240, width: 320 }),
+                published: true,
+                authorId: userIds[Math.floor(Math.random() * userIds.length)],
+                comments: {
+                    createMany: {
+                        data: Array.from({ length: 5 }).map(() => ({
+                            content: faker.lorem.sentence(),
+                            authorId: userIds[Math.floor(Math.random() * userIds.length)],
+                        })),
+                    },
+                },
+            },
+        });
+    }
 
     console.log('Seeding completed');
 }
@@ -79,3 +74,5 @@ main()
         console.error(e);
         process.exit(1);
     });
+
+// run command: npx run db:seed

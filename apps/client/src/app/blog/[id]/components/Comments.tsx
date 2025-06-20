@@ -1,53 +1,55 @@
 "use client";
 
-import { getPostComments } from "@/lib/actions/post.action";
-import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { DEFAULT_PAGE_SIZE } from "@/utils/services/constants";
+import { useState, useEffect, useCallback } from "react";
 import CommentCard from "./CommentCard";
 import CommentCardSkeleton from "./CommentCardSkeleton";
-import { SessionUser } from "@/lib/session";
 import AddComment from "./AddComment";
 import { RefreshCcwIcon } from "lucide-react";
 import CommentPagination from "./CommentPagination";
+import { usePostStore } from "@/stores/usePostStore";
 
 interface CommentsProps {
-  postId: number;
-  user?: SessionUser;
+  post: IPost;
+  user?: IUser;
 };
 
-const Comments = ({ postId, user }: CommentsProps) => {
+const Comments = (props: CommentsProps) => {
   const [page, setPage] = useState(1);
+  const { getPostComments, comments, isLoading, CommentCount } = usePostStore();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["GET_POST_COMMENTS", postId, page],
-    queryFn: async () =>
-      await getPostComments({
-        postId,
-        skip: (page - 1) * DEFAULT_PAGE_SIZE,
-        take: DEFAULT_PAGE_SIZE,
-      }),
-  });
+  const fetchComments = useCallback(async () => {
+    await getPostComments(
+      props.post.id,
+      (page - 1) * DEFAULT_PAGE_SIZE,
+      DEFAULT_PAGE_SIZE
+    );
+  }, [props.post.id, page, getPostComments]);
 
-  const totalPages = Math.ceil((data?.count ?? 0) / DEFAULT_PAGE_SIZE);
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments, page, props.post.id]);
+
+  const totalPages = Math.ceil((CommentCount ?? 0) / DEFAULT_PAGE_SIZE);
+
   return (
     <div className="p-2 rounded-md shadow-md">
-      <button onClick={() => refetch()}>
+      <button onClick={() => fetchComments()}>
         <RefreshCcwIcon className="w-6 cursor-pointer" />
       </button>
 
       <h6 className="text-lg text-slate-700 ">Comments</h6>
 
-      {!!user && <AddComment user={user} postId={postId} refetch={refetch} />}
+      {!!props.user && <AddComment user={props.user} postId={props.post.id} refetch={() => fetchComments()} />}
 
       <div className="flex flex-col gap-4">
         {isLoading
           ? Array.from({ length: 12 }).map((_, index) => (
-              <CommentCardSkeleton key={index} />
-            ))
-          : data?.comments.map((comment) => (
-              <CommentCard key={comment.id} comment={comment} />
-            ))}
+            <CommentCardSkeleton key={index} />
+          ))
+          : comments.map((comment) => (
+            <CommentCard key={comment.id} comment={comment} />
+          ))}
       </div>
 
       {totalPages > 1 && <CommentPagination

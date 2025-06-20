@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { deletePost, fetchPostById } from "@/lib/actions/post.action";
+import { usePostStore } from "@/stores/usePostStore";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -20,7 +20,8 @@ interface DeletePostPageProps {
 
 const DeletePostPage = async (props: DeletePostPageProps) => {
   const params = await props.params;
-  const post = await fetchPostById(+params.id);
+
+  const { deletePost, post } = usePostStore();
 
   const formAction = async () => {
     "use server";
@@ -48,7 +49,7 @@ const DeletePostPage = async (props: DeletePostPageProps) => {
 
         <p className="text-slate-400 font-bold">Title of the Post</p>
 
-        <p>{post.title}</p>
+        <p>{post?.title}</p>
       </CardDescription>
 
       <CardContent>

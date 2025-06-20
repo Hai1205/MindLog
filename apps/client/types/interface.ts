@@ -8,8 +8,8 @@ declare global {
         posts?: IPost[];
         comments?: IComment[];
         likes?: ILike[];
-        createdAt?: Date;
-        updatedAt?: Date;
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     interface IPost {
@@ -24,8 +24,8 @@ declare global {
         comments?: IComment[];
         tags?: ITag[];
         likes?: ILike[];
-        createdAt?: Date;
-        updatedAt?: Date;
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     interface IComment {
@@ -35,8 +35,8 @@ declare global {
         post?: IPost;
         authorId: number;
         author?: IUser;
-        createdAt?: Date;
-        updatedAt?: Date;
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     interface ITag {

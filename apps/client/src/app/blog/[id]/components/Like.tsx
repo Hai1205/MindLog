@@ -1,45 +1,42 @@
 "use client";
 
-import { getPostLikeData, likePost, unLikePost } from "@/lib/actions/post.action";
-import { SessionUser } from "@/lib/session";
+import { usePostStore } from "@/stores/usePostStore";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/20/solid";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 interface LikeProps {
   postId: number;
-  user?: SessionUser;
+  user?: IUser;
 };
 
 const Like = (props: LikeProps) => {
-  const { data, refetch: refetchPostLikeData } = useQuery({
-    queryKey: ["GET_POST_LIKE_DATA", props.postId],
-    queryFn: async () => await getPostLikeData(props.postId),
-  });
+  const { likePost, unlikePost, getPostLikeData, likeCount, userLikedPost } = usePostStore();
 
-  const likeMutation = useMutation({
-    mutationFn: () => likePost(props.postId),
-    onSuccess: () => refetchPostLikeData(),
-  });
+  useEffect(() => {
+    const fetchPostLikeData = async () => {
+      const response = await getPostLikeData(props.postId);
+      if (response && response.status && response.data) {
+        return response.data;
+      }
+    };
 
-  const unlikeMutation = useMutation({
-    mutationFn: () => unLikePost(props.postId),
-    onSuccess: () => refetchPostLikeData(),
-  });
+    fetchPostLikeData();
+  }, [getPostLikeData, props.postId]);
 
   return (
     <div className="mt-3 flex items-center justify-start gap-2">
-      {data?.userLikedPost ? (
-        <button onClick={() => unlikeMutation.mutate()}>
+      {userLikedPost ? (
+        <button onClick={() => unlikePost(props.postId)}>
           <SolidHeartIcon className="w-6 text-rose-600 cursor-pointer" />
         </button>
       ) : (
-        <button onClick={() => likeMutation.mutate()}>
+        <button onClick={() => likePost(props.postId)}>
           <HeartIcon className="w-6 cursor-pointer" />
         </button>
       )}
-      
-      <p className="text-slate-600">{data?.likeCount}</p>
+
+      <p className="text-slate-600">{likeCount}</p>
     </div>
   );
 };

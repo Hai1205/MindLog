@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DEFAULT_PAGE_SIZE } from 'src/constants';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/service/constants';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
 

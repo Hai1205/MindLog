@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/session";
+import { getSession } from "@/utils/services/session";
 import Link from "next/link";
 import ProfilePanel from "./ProfilePanel";
 import LoginPanel from "./LoginPanel";
